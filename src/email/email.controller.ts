@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Post, Res } from '@nestjs/common';
 import { EmailService } from './email.service';
+import { CreateEmailDto } from './dto/create-email.dto';
 
 @Controller('email')
 export class EmailController {
@@ -7,20 +8,8 @@ export class EmailController {
 
   @Post('send')
   async sendMail(
-    @Body('to') to: string,
-    @Body('subject') subject: string,
-    @Body('text') text: string,
+    @Body() createEmailDto: CreateEmailDto
   ) {
-    // return this.emailService.sendMail(to, subject, text);
-  }
-
-  @Get()
-  sendMailer(@Res() response: any) {
-    const mail = this.emailService.sendMail();
-
-    return response.status(200).json({
-      message: 'success',
-      mail,
-    });
+    return this.emailService.sendMail(createEmailDto);
   }
 }

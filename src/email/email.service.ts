@@ -1,20 +1,23 @@
 import { MailerService } from '@nestjs-modules/mailer';
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
+import { CreateEmailDto } from './dto/create-email.dto';
 
 @Injectable()
 export class EmailService {
   constructor(private readonly mailService: MailerService) {}
 
-  sendMail() {
-    const message = `Hola este es um email enviado desde un sistema de nestjs que tengas un buen dia!`;
+  async sendMail({ subject, text, to}: CreateEmailDto) {
 
-    this.mailService.sendMail({
-      from: 'Henry <kingsleyokgeorge@gmail.com>',
-      to: 'rc23004victor@gmail.com',
-      subject: `How to Send Emails with Nodemailer`,
-      text: message,
+    await this.mailService.sendMail({
+      from: process.env.GMAIL_USER,
+      to: to,
+      subject: subject,
+      text: text,
     });
 
-    // joanna@gmail.com
+    return{
+      message: 'success',
+      status: HttpStatus.OK
+    }
   }
 }
